@@ -1,7 +1,9 @@
+using Notes.Dal;
 using Notes.Dal.Interfaces;
 using Notes.Dal.Repositories;
-using Notes.Service.Interfaces;
 using Notes.Service.Implementations;
+using Notes.Service.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Notes
 {
@@ -13,6 +15,9 @@ namespace Notes
 
             // Add services to the container.
             builder.Services.AddRazorPages();
+
+            builder.Services.AddDbContext<ApplicationDBContext>(options =>
+            options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<INoteRepository, NoteRepository>();

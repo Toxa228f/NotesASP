@@ -100,7 +100,7 @@ namespace Notes.Service.Implementations
                     return new BaseResponse<User>()
                     {
                         Data = null,
-                        Responce = "пользователь не найден"
+                        Responce = "Пользователь не найден"
                     };
                 }
             }
@@ -166,7 +166,7 @@ namespace Notes.Service.Implementations
                     return new BaseResponse<User>()
                     {
                         Data = null,
-                        Responce = "пользователь не найден"
+                        Responce = "Пользователь не найден"
                     };
                 }
             }
@@ -199,7 +199,7 @@ namespace Notes.Service.Implementations
                     return new BaseResponse<bool>()
                     {
                         Data = false,
-                        Responce = "пользователь не обновлен"
+                        Responce = "Пользователь не обновлен"
                     };
                 }
             }
