@@ -37,7 +37,7 @@ namespace Notes.Dal.Repositories
 
         public async Task<User> GetById(Guid id) => await dbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
 
-        public async Task<User> GetByLoginAndPasswod(string login, string password) => await dbContext.Users.FirstOrDefaultAsync(x => x.Login == login && x.Password == password);
+        public async Task<User> GetByLoginAndPassword(string login, string password) => await dbContext.Users.FirstOrDefaultAsync(x => x.Login == login && x.Password == password);
 
         public async Task SaveChanges() => await dbContext.SaveChangesAsync();
 
