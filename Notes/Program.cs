@@ -1,3 +1,6 @@
+using Notes.Dal.Interfaces;
+using Notes.Dal.Repositories;
+
 namespace Notes
 {
     public class Program
@@ -9,6 +12,10 @@ namespace Notes
             // Add services to the container.
             builder.Services.AddRazorPages();
 
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<INoteRepository, NoteRepository>();
+            builder.Services.AddScoped<ITagRepository, TagRepository>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -18,6 +25,7 @@ namespace Notes
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
