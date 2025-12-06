@@ -1,5 +1,7 @@
 using Notes.Dal.Interfaces;
 using Notes.Dal.Repositories;
+using Notes.Service.Interfaces;
+using Notes.Service.Implementations;
 
 namespace Notes
 {
@@ -15,6 +17,10 @@ namespace Notes
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<INoteRepository, NoteRepository>();
             builder.Services.AddScoped<ITagRepository, TagRepository>();
+
+            builder.Services.AddScoped<IUsersService, UsersService>();
+            builder.Services.AddScoped<INoteService, NoteService>();
+            builder.Services.AddScoped<ITagService, TagService>();
 
             var app = builder.Build();
 

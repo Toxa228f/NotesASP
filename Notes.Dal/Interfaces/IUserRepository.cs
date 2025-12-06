@@ -9,6 +9,6 @@ namespace Notes.Dal.Interfaces
 {
     public interface IUserRepository : IBaseRepository<User>
     {
-        Task<User> GetByLogin(string login);
+        Task<User> GetByLoginAndPassword(string login, string password);
     }
 }
