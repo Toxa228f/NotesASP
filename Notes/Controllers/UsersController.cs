@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Notes.Coding;
 using Notes.Domain.Entities;
 using Notes.Domain.Interfaces;
 using Notes.JWT;
@@ -43,7 +44,7 @@ namespace Notes.Controllers
             User user = new()
             {
                 Login = dto.Login,
-                Password = dto.Password
+                Password = HashCodeHelper.HashString(dto.Password)
             };
 
             IBaseResponse<bool> response = await service.CreateAsync(user);
@@ -64,7 +65,7 @@ namespace Notes.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserLoginDto dto)
         {
-            IBaseResponse<User> response = await service.GetByLoginAndPasswordAsync(dto.Login, dto.Password);
+            IBaseResponse<User> response = await service.GetByLoginAndPasswordAsync(dto.Login, HashCodeHelper.HashString(dto.Password));
             if (response.Data == null) return Unauthorized("Неверный логин или пароль");
 
             string newToken = token.GenerateNewToken(response.Data);
