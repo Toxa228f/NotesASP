@@ -27,6 +27,7 @@ namespace Notes.Dal
             {
                 entity.HasKey(n => n.Id);
                 entity.Property(n => n.Name).IsRequired().HasMaxLength(32);
+
             });
 
             modelBuilder.Entity<Tag>(entity =>

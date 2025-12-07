@@ -45,6 +45,10 @@ namespace Notes.Dal.Migrations
                         .HasMaxLength(32)
                         .HasColumnType("character varying(32)");
 
+                    b.Property<List<Guid>>("Tags")
+                        .IsRequired()
+                        .HasColumnType("uuid[]");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
@@ -64,12 +68,7 @@ namespace Notes.Dal.Migrations
                         .HasMaxLength(32)
                         .HasColumnType("character varying(32)");
 
-                    b.Property<Guid?>("NoteId")
-                        .HasColumnType("uuid");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("NoteId");
 
                     b.ToTable("Tags");
                 });
@@ -92,18 +91,6 @@ namespace Notes.Dal.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("Notes.Domain.Entities.Tag", b =>
-                {
-                    b.HasOne("Notes.Domain.Entities.Note", null)
-                        .WithMany("Tags")
-                        .HasForeignKey("NoteId");
-                });
-
-            modelBuilder.Entity("Notes.Domain.Entities.Note", b =>
-                {
-                    b.Navigation("Tags");
                 });
 #pragma warning restore 612, 618
         }

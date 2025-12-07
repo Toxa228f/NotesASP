@@ -17,8 +17,20 @@ namespace Notes.Controllers
     public class NotesController : ControllerBase
     {
         private INoteService service;
-        public NotesController(INoteService service) => this.service = service;
+        private ITagService tagService;
+        public NotesController(INoteService service, ITagService tagService) => (this.service,this.tagService) = (service,tagService);
 
+        private async Task<List<string>> GetTagsName(IEnumerable<Guid>? n)
+        {
+            if (n == null) return null;
+            List<string> tags = new();
+            foreach (var item in n)
+            {
+                IBaseResponse<Tag> tg = await tagService.SelectByIdAsync(item);
+                tags.Add(tg?.Data?.Name);
+            }
+            return tags;
+        }
 
         [HttpGet("GetMyNotes")]
         public async Task<IActionResult> GetMyNotes()
@@ -28,18 +40,32 @@ namespace Notes.Controllers
 
             IBaseResponse<IEnumerable<Note>> notes = await service.GetAllByUserIdAsync(Guid.Parse(userId));
 
-            IEnumerable<NoteResponseDto> result = notes.Data.Select(n => new NoteResponseDto
+            if (notes.Data != null)
             {
-                Id = n.Id,
-                Name = n.Name,
-                Description = n.Description,
-                ImageUrls = n.ImageUrls,
-                CreationDate = n.CreationDate,
-                Tags = n.Tags?.Select(t => new TagResponseDto { Id = t.Id, Name = t.Name }).ToList(),
-                UserId = n.UserId
-            }).ToList();
+                List<NoteResponseDto> result = new List<NoteResponseDto>();
+                foreach (var n in notes.Data)
+                {
+                    List<string> tags = new();
+                    foreach (var item in n?.Tags)
+                    {
+                        IBaseResponse<Tag> tg = await tagService.SelectByIdAsync(item);
+                        tags.Add(tg?.Data?.Name);
+                    }
+                    result.Add(new NoteResponseDto
+                    {
+                        Id = n.Id,
+                        Name = n.Name,
+                        Description = n?.Description,
+                        ImageUrls = n?.ImageUrls,
+                        CreationDate = n.CreationDate,
+                        Tags = await GetTagsName(n?.Tags),
+                        UserId = n.UserId
+                    });
+                }
 
-            return Ok(result);
+                return Ok(result);
+            }
+            else return Ok(notes.Responce);
         }
 
         [HttpGet("{id}")]
@@ -52,19 +78,23 @@ namespace Notes.Controllers
             if (response.Data == null || response.Data.UserId.ToString() != userId)
                 return Forbid();
 
-            Note note = response.Data;
-            NoteResponseDto dto = new NoteResponseDto
+            if (response.Data != null)
             {
-                Id = note.Id,
-                Name = note.Name,
-                Description = note.Description,
-                ImageUrls = note.ImageUrls,
-                CreationDate = note.CreationDate,
-                Tags = note.Tags?.Select(t => new TagResponseDto { Id = t.Id, Name = t.Name }).ToList(),
-                UserId = note.UserId
-            };
+                Note note = response.Data;
+                NoteResponseDto dto = new NoteResponseDto
+                {
+                    Id = note.Id,
+                    Name = note.Name,
+                    Description = note?.Description,
+                    ImageUrls = note?.ImageUrls,
+                    CreationDate = note.CreationDate,
+                    Tags = await GetTagsName(note?.Tags),
+                    UserId = note.UserId
+                };
 
-            return Ok(dto);
+                return Ok(dto);
+            }
+            else return Ok(response.Responce);
         }
 
         // POST api/<NotesController>
@@ -77,10 +107,11 @@ namespace Notes.Controllers
             Note note = new Note
             {
                 Name = dto.Name,
-                Description = dto.Description,
-                ImageUrls = dto.ImageUrls,
+                Description = dto?.Description,
+                ImageUrls = dto?.ImageUrls,
                 UserId = Guid.Parse(userId),
-                CreationDate = DateTime.UtcNow
+                CreationDate = DateTime.UtcNow,
+                Tags = dto?.Tags
             };
 
             IBaseResponse<bool> response = await service.CreateAsync(note);
@@ -89,10 +120,10 @@ namespace Notes.Controllers
             {
                 Id = note.Id,
                 Name = note.Name,
-                Description = note.Description,
-                ImageUrls = note.ImageUrls,
+                Description = note?.Description,
+                ImageUrls = note?.ImageUrls,
                 CreationDate = note.CreationDate,
-                Tags = new List<TagResponseDto>(),
+                Tags = await GetTagsName(note?.Tags),
                 UserId = note.UserId
             };
 
@@ -111,8 +142,9 @@ namespace Notes.Controllers
             if (existing == null || existing.UserId.ToString() != userId) return Forbid();
 
             existing.Name = dto.Name;
-            existing.Description = dto.Description;
-            existing.ImageUrls = dto.ImageUrls;
+            existing.Description = dto?.Description;
+            existing.ImageUrls = dto?.ImageUrls;
+            existing.Tags = dto?.Tags;
 
             IBaseResponse<bool> updateResponse = await service.UpdateAsync(existing);
             return Ok(updateResponse.Data);

@@ -12,15 +12,15 @@ namespace Notes.Domain.DTOs
     {
         public class NoteCreateDto
         {
-            [Required]
-            [StringLength(32, ErrorMessage = "Максимальная длина 32 символа")]
+            [Required,StringLength(32, ErrorMessage = "Максимальная длина 32 символа")]
             public string Name { get; set; }
 
             [StringLength(128, ErrorMessage = "Максимальная длина 128 символов")]
-            public string Description { get; set; }
+            public string? Description { get; set; }
 
-            public List<string> ImageUrls { get; set; }
-            public List<Guid> TagIds { get; set; }
+            
+            public List<string>? ImageUrls { get; set; }
+            public List<Guid>? Tags { get; set; }
         }
 
         public class NoteUpdateDto
@@ -36,16 +36,16 @@ namespace Notes.Domain.DTOs
             public string Description { get; set; }
 
             public List<string> ImageUrls { get; set; }
-            public List<Guid> TagIds { get; set; }
+            public List<Guid> Tags { get; set; }
         }
 
         public class NoteResponseDto
         {
             public Guid Id { get; set; }
             public string Name { get; set; }
-            public string Description { get; set; }
-            public List<string> ImageUrls { get; set; }
-            public List<TagResponseDto> Tags { get; set; }
+            public string? Description { get; set; }
+            public List<string>? ImageUrls { get; set; }
+            public List<string>? Tags { get; set; }
             public DateTime CreationDate { get; set; }
             public Guid UserId { get; set; }
         }
