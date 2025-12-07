@@ -56,10 +56,10 @@ namespace Notes.Controllers
             IBaseResponse<User> response = await service.GetByLoginAndPasswordAsync(dto.Login, dto.Password);
             if (response.Data == null) return Unauthorized("Неверный логин или пароль");
 
-            string token = token.GenerateToken(response.Data);
+            string newToken = token.GenerateNewToken(response.Data);
             return Ok(new
             {
-                token,
+                newToken,
                 user = new UserResponseDto
                 {
                     Id = response.Data.Id,

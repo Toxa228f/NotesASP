@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using Notes.Dal;
 using Notes.Dal.Interfaces;
 using Notes.Dal.Repositories;
+using Notes.Middleware;
 using Notes.Service.Implementations;
 using Notes.Service.Interfaces;
 using System.Text;
@@ -66,6 +67,8 @@ namespace Notes
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            app.UseMiddleware<CatchErrorsMiddleware>();
 
             app.UseRouting();
 
