@@ -16,8 +16,8 @@ namespace Notes.Controllers
     public class UsersController : ControllerBase
     {
         private IUsersService service;
-        private GenerateToken token;
-        public UsersController(IUsersService service, GenerateToken token) => (this.service, this.token) = (service, token);
+        private IGenerateToken token;
+        public UsersController(IUsersService service, IGenerateToken token) => (this.service, this.token) = (service, token);
 
 
         [Authorize]

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Notes.JWT
 {
-    public class GenerateToken
+    public class GenerateToken : IGenerateToken
     {
         private readonly IConfiguration config;
 

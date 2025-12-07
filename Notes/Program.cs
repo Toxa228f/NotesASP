@@ -4,10 +4,12 @@ using Microsoft.IdentityModel.Tokens;
 using Notes.Dal;
 using Notes.Dal.Interfaces;
 using Notes.Dal.Repositories;
+using Notes.JWT;
 using Notes.Middleware;
 using Notes.Service.Implementations;
 using Notes.Service.Interfaces;
 using System.Text;
+
 
 namespace Notes
 {
@@ -31,7 +33,10 @@ namespace Notes
             builder.Services.AddScoped<INoteService, NoteService>();
             builder.Services.AddScoped<ITagService, TagService>();
 
+            builder.Services.AddScoped<IGenerateToken, GenerateToken>();
 
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
 
             builder.Services.AddAuthentication(options =>
             {
@@ -63,6 +68,9 @@ namespace Notes
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI();
             app.MapControllers();
 
             app.UseHttpsRedirection();
