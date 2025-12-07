@@ -16,7 +16,7 @@ namespace Notes
             // Add services to the container.
             builder.Services.AddRazorPages();
 
-            builder.Services.AddDbContext<ApplicationDBContext>(options =>
+            builder.Services.AddDbContextPool<ApplicationDBContext>(options =>
             options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -27,6 +27,8 @@ namespace Notes
             builder.Services.AddScoped<INoteService, NoteService>();
             builder.Services.AddScoped<ITagService, TagService>();
 
+            builder.Services.AddControllers();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -36,13 +38,14 @@ namespace Notes
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
+            app.MapControllers();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapRazorPages();
