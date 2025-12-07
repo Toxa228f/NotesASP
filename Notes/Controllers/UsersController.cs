@@ -6,6 +6,7 @@ using Notes.Domain.Interfaces;
 using Notes.JWT;
 using Notes.Service.Implementations;
 using Notes.Service.Interfaces;
+using static Notes.Domain.DTOs.TagDTOs;
 using static Notes.Domain.DTOs.UserDTOs;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -78,6 +79,51 @@ namespace Notes.Controllers
                     Login = response.Data.Login
                 }
             });
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<bool>> Update(Guid id,string password, [FromBody] UserUpdateDto dto)
+        {
+            string userId = User.FindFirst("userId")?.Value;
+            if (userId == null) return Unauthorized();
+
+            IBaseResponse<User> response = await service.SelectByIdAsync(id);
+            User existing = response.Data;
+            if (existing == null) return Forbid();
+
+            if (HashCodeHelper.HashString(password) == existing.Password)
+            {
+                existing.Login = dto.Login;
+
+                IBaseResponse<bool> updateResponse = await service.UpdateAsync(existing);
+                return Ok(updateResponse.Data);
+            }
+            else
+            {
+                return Ok("Неверный логин или пароль");
+            }
+        }
+
+        // DELETE api/<NotesController>/5
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<bool>> Delete(Guid id,string password)
+        {
+            string? userId = User.FindFirst("userId")?.Value;
+            if (userId == null) return Unauthorized();
+
+            IBaseResponse<User> response = await service.SelectByIdAsync(id);
+            User? user = response.Data;
+            if (user == null) return Forbid();
+            if (HashCodeHelper.HashString(password) == user.Password)
+            {
+                IBaseResponse<bool> deleteResponse = await service.DeleteAsync(user);
+                return Unauthorized("Пользователь удален");
+            }
+            else
+            {
+                return Ok("Неверный логин или пароль");
+            }
+
         }
     }
 }

@@ -4,6 +4,7 @@ using Notes.Domain.Entities;
 using Notes.Domain.Interfaces;
 using Notes.Service.Implementations;
 using Notes.Service.Interfaces;
+using static Notes.Domain.DTOs.NoteDTOs;
 using static Notes.Domain.DTOs.TagDTOs;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -82,6 +83,37 @@ namespace Notes.Controllers
             };
 
             return Ok(result);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<bool>> Update(Guid id, [FromBody] TagUpdateDto dto)
+        {
+            string userId = User.FindFirst("userId")?.Value;
+            if (userId == null) return Unauthorized();
+
+            IBaseResponse<Tag> response = await service.SelectByIdAsync(id);
+            Tag existing = response.Data;
+            if (existing == null) return Forbid();
+
+            existing.Name = dto.Name;
+
+            IBaseResponse<bool> updateResponse = await service.UpdateAsync(existing);
+            return Ok(updateResponse.Data);
+        }
+
+        // DELETE api/<NotesController>/5
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<bool>> Delete(Guid id)
+        {
+            string? userId = User.FindFirst("userId")?.Value;
+            if (userId == null) return Unauthorized();
+
+            IBaseResponse<Tag> response = await service.SelectByIdAsync(id);
+            Tag? tag = response.Data;
+            if (tag == null) return Forbid();
+
+            IBaseResponse<bool> deleteResponse = await service.DeleteAsync(tag);
+            return Ok(deleteResponse.Data);
         }
     }
 }

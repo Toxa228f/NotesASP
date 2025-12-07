@@ -31,6 +31,12 @@ namespace Notes.Domain.DTOs
             public string Password { get; set; }
         }
 
+        public class UserUpdateDto
+        {
+            [Required]
+            public string Login { get; set; }
+        }
+
         public class UserResponseDto
         {
             public Guid Id { get; set; }

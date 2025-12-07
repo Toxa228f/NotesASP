@@ -16,6 +16,13 @@ namespace Notes.Domain.DTOs
             public string Name { get; set; }
         }
 
+        public class  TagUpdateDto
+        {
+            [Required]
+            [StringLength(32)]
+            public string Name { get; set; }
+        }
+
         public class TagResponseDto
         {
             public Guid Id { get; set; }
