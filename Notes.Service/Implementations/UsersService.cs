@@ -19,6 +19,13 @@ namespace Notes.Service.Implementations
         {
             try
             {
+                var check = await rep.GetByLogin(entity.Login);
+                if (check!=null) 
+                    return new BaseResponse<bool>()
+                    {
+                        Data = false,
+                        Responce = "Пользователь с таким логином уже существует"
+                    };
                 bool ans = await rep.Create(entity);
                 if (ans)
                 {

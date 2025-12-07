@@ -12,6 +12,5 @@ namespace Notes.Service.Interfaces
     {
         public Task<IBaseResponse<User>> GetByLoginAndPasswordAsync(string login,string password);
 
-
     }
 }
