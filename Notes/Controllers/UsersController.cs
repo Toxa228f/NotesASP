@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Notes.Domain.Entities;
 using Notes.Domain.Interfaces;
+using Notes.JWT;
 using Notes.Service.Implementations;
 using Notes.Service.Interfaces;
 using static Notes.Domain.DTOs.UserDTOs;
@@ -15,7 +16,8 @@ namespace Notes.Controllers
     public class UsersController : ControllerBase
     {
         private IUsersService service;
-        public UsersController(IUsersService service) => this.service = service;
+        private GenerateToken token;
+        public UsersController(IUsersService service, GenerateToken token) => (this.service, this.token) = (service, token);
 
 
         [Authorize]
@@ -54,11 +56,15 @@ namespace Notes.Controllers
             IBaseResponse<User> response = await service.GetByLoginAndPasswordAsync(dto.Login, dto.Password);
             if (response.Data == null) return Unauthorized("Неверный логин или пароль");
 
-            // TODO JWT
-            return Ok(new UserResponseDto
+            string token = token.GenerateToken(response.Data);
+            return Ok(new
             {
-                Id = response.Data.Id,
-                Login = response.Data.Login
+                token,
+                user = new UserResponseDto
+                {
+                    Id = response.Data.Id,
+                    Login = response.Data.Login
+                }
             });
         }
     }
