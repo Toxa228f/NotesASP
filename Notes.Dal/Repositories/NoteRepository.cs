@@ -37,7 +37,7 @@ namespace Notes.Dal.Repositories
 
         public async Task<IEnumerable<Note>> GetAllByUserId(Guid id) => await dbContext.Notes.Where(x => x.UserId == id).ToListAsync();
 
-        public async Task<Note> GetById(Guid id) => await dbContext.Notes.FirstOrDefaultAsync(x => x.UserId == id);
+        public async Task<Note> GetById(Guid id) => await dbContext.Notes.FirstOrDefaultAsync(x => x.Id == id);
 
         public async Task SaveChanges() => await dbContext.SaveChangesAsync();
 

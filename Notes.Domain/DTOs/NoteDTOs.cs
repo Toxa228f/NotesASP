@@ -47,6 +47,7 @@ namespace Notes.Domain.DTOs
             public List<string> ImageUrls { get; set; }
             public List<TagResponseDto> Tags { get; set; }
             public DateTime CreationDate { get; set; }
+            public Guid UserId { get; set; }
         }
     }
 }

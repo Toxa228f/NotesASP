@@ -88,7 +88,6 @@ namespace Notes.Service.Implementations
                 Tag ans = await rep.GetTagByName(name);
                 if (ans != null)
                 {
-                    await rep.SaveChanges();
                     return new BaseResponse<Tag>()
                     {
                         Data = ans,
@@ -121,7 +120,6 @@ namespace Notes.Service.Implementations
                 IEnumerable<Tag> ans = await rep.SelectAll();
                 if (ans.Count() > 0)
                 {
-                    await rep.SaveChanges();
                     return new BaseResponse<IEnumerable<Tag>>()
                     {
                         Data = ans.ToList(),
@@ -154,7 +152,6 @@ namespace Notes.Service.Implementations
                 Tag ans = await rep.GetById(id);
                 if (ans != null)
                 {
-                    await rep.SaveChanges();
                     return new BaseResponse<Tag>()
                     {
                         Data = ans,

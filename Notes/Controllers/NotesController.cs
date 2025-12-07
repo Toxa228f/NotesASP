@@ -35,7 +35,8 @@ namespace Notes.Controllers
                 Description = n.Description,
                 ImageUrls = n.ImageUrls,
                 CreationDate = n.CreationDate,
-                Tags = n.Tags.Select(t => new TagResponseDto { Id = t.Id, Name = t.Name }).ToList()
+                Tags = n.Tags?.Select(t => new TagResponseDto { Id = t.Id, Name = t.Name }).ToList(),
+                UserId = n.UserId
             }).ToList();
 
             return Ok(result);
@@ -59,7 +60,8 @@ namespace Notes.Controllers
                 Description = note.Description,
                 ImageUrls = note.ImageUrls,
                 CreationDate = note.CreationDate,
-                Tags = note.Tags.Select(t => new TagResponseDto { Id = t.Id, Name = t.Name }).ToList()
+                Tags = note.Tags?.Select(t => new TagResponseDto { Id = t.Id, Name = t.Name }).ToList(),
+                UserId = note.UserId
             };
 
             return Ok(dto);
@@ -90,7 +92,8 @@ namespace Notes.Controllers
                 Description = note.Description,
                 ImageUrls = note.ImageUrls,
                 CreationDate = note.CreationDate,
-                Tags = new List<TagResponseDto>()
+                Tags = new List<TagResponseDto>(),
+                UserId = note.UserId
             };
 
             return Ok(result);

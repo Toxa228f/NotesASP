@@ -47,7 +47,18 @@ namespace Notes.Controllers
             };
 
             IBaseResponse<bool> response = await service.CreateAsync(user);
-            return Ok(response);
+            if (!response.Data) return BadRequest(response.Responce);
+            string newToken = token.GenerateNewToken(user);
+
+            return Ok(new
+            {
+                newToken,
+                user = new UserResponseDto
+                {
+                    Id = user.Id,
+                    Login = user.Login
+                }
+            });
         }
 
         [HttpPost("login")]

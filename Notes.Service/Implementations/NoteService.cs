@@ -88,7 +88,6 @@ namespace Notes.Service.Implementations
                 IEnumerable<Note> ans = await rep.GetAllByUserId(id);
                 if (ans.Count()>0)
                 {
-                    await rep.SaveChanges();
                     return new BaseResponse<IEnumerable<Note>> ()
                     {
                         Data = ans.ToList(),
@@ -121,7 +120,6 @@ namespace Notes.Service.Implementations
                 IEnumerable<Note> ans = await rep.SelectAll();
                 if (ans.Count() > 0)
                 {
-                    await rep.SaveChanges();
                     return new BaseResponse<IEnumerable<Note>>()
                     {
                         Data = ans.ToList(),
@@ -154,7 +152,6 @@ namespace Notes.Service.Implementations
                 Note ans = await rep.GetById(id);
                 if (ans != null)
                 {
-                    await rep.SaveChanges();
                     return new BaseResponse<Note>()
                     {
                         Data = ans,

@@ -88,7 +88,6 @@ namespace Notes.Service.Implementations
                 User ans = await rep.GetByLoginAndPassword(login, password);
                 if (ans != null)
                 {
-                    await rep.SaveChanges();
                     return new BaseResponse<User>()
                     {
                         Data = ans,
@@ -121,7 +120,6 @@ namespace Notes.Service.Implementations
                 IEnumerable<User> ans = await rep.SelectAll();
                 if (ans.Count() > 0)
                 {
-                    await rep.SaveChanges();
                     return new BaseResponse<IEnumerable<User>>()
                     {
                         Data = ans.ToList(),
@@ -154,7 +152,6 @@ namespace Notes.Service.Implementations
                 User ans = await rep.GetById(id);
                 if (ans != null)
                 {
-                    await rep.SaveChanges();
                     return new BaseResponse<User>()
                     {
                         Data = ans,
